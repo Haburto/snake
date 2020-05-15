@@ -1,4 +1,3 @@
-import math
 import random
 import pygame
 import tkinter as tk
@@ -6,7 +5,6 @@ from tkinter import messagebox
 
 
 class Cube(object):
-    # global rows, width
     rows = 20
     width = 500
 
