@@ -101,10 +101,28 @@ class Snake(object):
                     cube.move(cube.dirnx, cube.dirny)
 
     def reset(self, pos):
-        pass
+        self.head = Cube(pos)
+        self.body = []
+        self.body.append(self.head)
+        self.turn = {}
+        self.dirnx = 0
+        self.dirny = 1
 
     def add_cube(self):
-        pass
+        tail = self.body[-1]
+        dx, dy, = tail.dirnx, tail.dirny
+
+        if dx == 1 and dy == 0:
+            self.body.append(Cube((tail.pos[0] - 1, tail.pos[1])))
+        elif dx == -1 and dy == 0:
+            self.body.append(Cube((tail.pos[0] + 1, tail.pos[1])))
+        elif dx == 0 and dy == 1:
+            self.body.append(Cube((tail.pos[0], tail.pos[1] - 1)))
+        elif dx == 0 and dy == -1:
+            self.body.append(Cube((tail.pos[0], tail.pos[1] + 1)))
+
+        self.body[-1].dirnx = dx
+        self.body[-1].dirny = dy
 
     def draw(self, surface):
         for index, cube in enumerate(self.body):
@@ -128,29 +146,49 @@ def draw_grid(w, rows, surface):
 
 
 def redraw_window(surface):
-    global width, rows, my_snake
+    global width, rows, my_snake, snack
     surface.fill((0, 0, 0))
     my_snake.draw(surface)
+    snack.draw(surface)
     draw_grid(width, rows, surface)
     pygame.display.update()
 
 
-def random_snack(rows, items):
-    pass
+def random_snack(rows, my_snake):
+    current_positions = my_snake.body
 
+    while True:
+        x = random.randrange(rows)
+        y = random.randrange(rows)
 
+        if len(list(filter(lambda z: z.pos == (x, y), current_positions))) > 0:
+            continue
+        else:
+            break
+
+    return x, y
+
+# Should look up tkinter docs for the following part
 def message_box(subject, content):
-    pass
+    root = tk.Tk()
+    root.attributes("-topmost", True)
+    root.withdraw()
+    messagebox.showinfo(subject, content)
+    try:
+        root.destroy()
+    except:
+        pass
 
 
 def main():
-    global width, rows, my_snake, size_between
+    global width, rows, my_snake, size_between, snack
     width = 500
     rows = 20
     size_between = width // rows
 
     win = pygame.display.set_mode((width, width))
     my_snake = Snake((255, 0, 0), (10, 10))
+    snack = Cube(random_snack(rows, my_snake), color=(0, 255, 0))
 
     clock = pygame.time.Clock()
 
@@ -162,6 +200,17 @@ def main():
         clock.tick(10)
 
         my_snake.move()
+        if my_snake.body[0].pos == snack.pos:
+            my_snake.add_cube()
+            snack = Cube(random_snack(rows, my_snake), color=(0, 255, 0))
+
+        for x in range(len(my_snake.body)):
+            if my_snake.body[x].pos in list(map(lambda z:z.pos, my_snake.body[x+1:])):
+                print("Score: ", len(my_snake.body))
+                message_box("You Lost!", "Play again...")
+                my_snake.reset((10, 10))
+                break
+
         redraw_window(win)
 
 
