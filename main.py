@@ -54,3 +54,6 @@ def message_box(subject, content):
 
 def main():
     pass
+
+
+main()
