@@ -53,7 +53,23 @@ def message_box(subject, content):
 
 
 def main():
-    pass
+    width = 500
+    height = 500
+    rows = 20
+
+    win = pygame.display.set_mode((width, height))
+    s = Snake((255, 0, 0), (10, 10))
+
+    clock = pygame.time.Clock()
+
+    flag = True
+    while flag:
+        # Not sure about this part
+        # Would it not be easier to just wait x ticks?
+        pygame.time.delay(50)
+        clock.tick(10)
+
+        redraw_window(win)
 
 
 main()
