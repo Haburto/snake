@@ -20,11 +20,65 @@ class Cube(object):
 
 
 class Snake(object):
+    body = []
+    turn = {}
+
     def __init__(self, color, pos):
-        pass
+        self.color = color
+        self.head = Cube(pos)
+        self.body.append(self.head)
+        self.dirnx = 0
+        self.dirny = 1
 
     def move(self):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+            keys = pygame.key.get_pressed()
+
+            # Set direction to move in
+            for key in keys:
+                if keys[pygame.K_LEFT]:
+                    self.dirnx = -1
+                    self.dirny = 0
+                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+                elif keys[pygame.K_RIGHT]:
+                    self.dirnx = 1
+                    self.dirny = 0
+                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+                elif keys[pygame.K_UP]:
+                    self.dirnx = 0
+                    self.dirny = -1
+                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+                elif keys[pygame.K_DOWN]:
+                    self.dirnx = 0
+                    self.dirny = 1
+                    self.turns[self.head.pos[:]] = [self.dirnx, self.dirny]
+
+        for index, cube in enumerate(self.body):
+            position = cube.pos[:]
+
+            if position in self.turns:
+                turn = self.truns[position]
+                cube.move(turn[0], turn[1])
+
+                if index == len(self.body)-1:
+                    self.turns.pop(position)
+
+            else:
+                # If + elif to check if we move through the edge of the screen
+                # Else to just move like normal
+                if cube.dirnx == -1 and cube.pos[0] <= 0:
+                    cube.pos = (cube.rows - 1, cube.pos[1])
+                elif cube.dirnx == 1 and cube.pos[0] >= cube.rows - 1:
+                    cube.pos = (0, cube.pos[1])
+                elif cube.dirny == 1 and cube.pos[1] >= cube.rows - 1:
+                    cube.pos = (cube.pos[0], 0)
+                elif cube.dirny == -1 and cube.pos[1] <= 0:
+                    cube.pos = (cube.pos[0], cube.rows - 1)
+                else:
+                    cube.move(cube.dirnx, cube.dirny)
 
     def reset(self, pos):
         pass
@@ -33,7 +87,11 @@ class Snake(object):
         pass
 
     def draw(self, surface):
-        pass
+        for index, cube in enumerate(self.body):
+            if index == 0:
+                cube.draw(surface, True)
+            else:
+                cube.draw(surface)
 
 
 def draw_grid(w, rows, surface):
@@ -50,8 +108,9 @@ def draw_grid(w, rows, surface):
 
 
 def redraw_window(surface):
-    global width, rows
+    global width, rows, my_snake
     surface.fill((0, 0, 0))
+    my_snake.draw(surface)
     draw_grid(width, rows, surface)
     pygame.display.update()
 
@@ -65,7 +124,7 @@ def message_box(subject, content):
 
 
 def main():
-    global width, rows
+    global width, rows, my_snake
     width = 500
     rows = 20
 
