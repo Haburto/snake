@@ -1,5 +1,5 @@
 # snake
-Following basically Tech With Tims Youtube tutorial
+I am basically following "Tech With Tim"s Youtube tutorial
 https://www.youtube.com/watch?v=CD4qAhfFuLo
 
 The goal is to futher enhance my understanding with python and pygame, so that I can venture deeper into the world of game developement.
