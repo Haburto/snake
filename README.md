@@ -2,7 +2,7 @@
 Following basically Tech With Tims Youtube tutorial
 https://www.youtube.com/watch?v=CD4qAhfFuLo
 
-The goal is to futher enhance my understanding with Python and Pygame, so that I can venture deeper into the world of game developement.
+The goal is to futher enhance my understanding with python and pygame, so that I can venture deeper into the world of game developement.
 
 # After finishing the project
 If you want to test my version yourself, be sure to have pygame and tkinter installed.
